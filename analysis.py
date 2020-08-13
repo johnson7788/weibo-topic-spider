@@ -2,12 +2,7 @@ from aip import AipNlp
 import pandas as pd
 import numpy as np
 import time
-
-
-# 此处输入baiduAIid
-APP_ID = ''
-API_KEY = ''
-SECRET_KEY = ''
+from config import APP_ID, API_KEY, SECRET_KEY, FILE_PATH
 
 client = AipNlp(APP_ID, API_KEY, SECRET_KEY)
 
@@ -20,9 +15,7 @@ def isPostive(text):
     except:
         return "积极"
 
-# 读取文件，注意修改文件路径
-file_path = 'mlxg.xls'
-data = pd.read_excel(file_path,encoding='utf-8')
+data = pd.read_excel(FILE_PATH, encoding='utf-8')
 
 moods = []
 count = 1
@@ -33,8 +26,8 @@ for i in data['微博内容']:
 
 data['情感倾向'] = pd.Series(moods)
 
-# 此处为覆盖保存
-data.to_excel(file_path)
+# 此处新的excel
+data.to_excel('new_'+ FILE_PATH)
 print("分析完成，已保存")
 
 

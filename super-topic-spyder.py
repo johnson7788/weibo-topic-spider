@@ -181,13 +181,9 @@ def spider(username,password,driver,book_name_xls,sheet_name_xls,keyword,maxWeib
 
     
 if __name__ == '__main__':
-    from config import USERNAME, PASSWORD
-    # username = "" #你的微博登录名
-    # password = "" #你的密码
-    driver = webdriver.Chrome()#你的chromedriver的地址
-    book_name_xls = "test.xls" #填写你想存放excel的路径，没有文件会自动创建
-    sheet_name_xls = '微博数据' #sheet表名
+    from config import USERNAME, PASSWORD, DRIVER, FILE_PATH, SHEET_NAME
+    driver = webdriver.Chrome(DRIVER)#你的chromedriver的地址
     maxWeibo = 5000 #设置最多多少条微博
-    keywords = ["肺炎",] # 此处可以设置多个超话关键词 
+    keywords = ["sky光遇",] # 此处可以设置多个超话关键词
     for keyword in keywords:
-        spider(USERNAME,PASSWORD,driver,book_name_xls,sheet_name_xls,keyword,maxWeibo)
+        spider(USERNAME,PASSWORD,driver,FILE_PATH,SHEET_NAME,keyword,maxWeibo)
