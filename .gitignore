@@ -13,6 +13,8 @@ TextCNN/generate/tmp/
 Res2Net/model
 Res2Net/data
 Res2Net/result
+weibodata
+seg_result
 
 # C extensions
 *.so
