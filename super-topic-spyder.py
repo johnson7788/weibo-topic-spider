@@ -67,34 +67,33 @@ def insert_data(elems,path,name,yuedu,taolun):
               "话题讨论数" + yuedu + "|"
               "话题阅读数" + taolun)
         '''
-        value1 = [[rid, weibo_username, weibo_userlevel,weibo_content, shares,comments,likes,weibo_time,keyword,name,yuedu,taolun],]
+        data = [[rid, weibo_username, weibo_userlevel,weibo_content, shares,comments,likes,weibo_time,keyword,name,yuedu,taolun],]
         print("当前插入第%d条数据" % rid)
-        save.write_excel_xls_append_norepeat(book_name_xls, value1)
+        save.write_excel_xls_append_norepeat(FILE_PATH, data)
 #获取当前页面的数据
 def get_current_weibo_data(elems,book_name_xls,name,yuedu,taolun,maxWeibo):
     #开始爬取数据
-        before = 0 
-        after = 0
-        n = 0 
+        #重试5次
+        n = 0
         timeToSleep = 100
-        while True:
+        after = None
+        while n < 5:
             before = after
             Transfer_Clicks(driver)
             time.sleep(3)
             elems = driver.find_elements_by_css_selector('div.card.m-panel.card9')
-            print("当前包含微博最大数量：%d,n当前的值为：%d, n值到5说明已无法解析出新的微博" % (len(elems),n))
-            after = len(elems)
-            if after > before:
+            after = elems
+            if before == after:
+                # 元素不改变的时候，n+1
+                n += 1
+                continue
+            else:
+                #元素改变的话，重置n
                 n = 0
-            if after == before:        
-                n = n + 1
-            if n == 5:
-                print("当前关键词最大微博数为：%d" % after)
-                insert_data(elems,book_name_xls,name,yuedu,taolun)
-                break
+            print("当前包含微博最大数量：%d,重试次数为：%d,重试次数到5次，自动退出" % (len(elems),n))
+            insert_data(elems,book_name_xls,name,yuedu,taolun)
             if len(elems)>maxWeibo:
-                print("当前微博数以达到%d条"%maxWeibo)
-                insert_data(elems,book_name_xls,name,yuedu,taolun)
+                print("当前微博数以达到%d条，退出"%maxWeibo)
                 break
             '''
             if after > timeToSleep:
@@ -144,7 +143,7 @@ def spider(username,password,driver,book_name_xls,sheet_name_xls,keyword,maxWeib
         result = isPresent()
         # 解决输入验证码无法跳转的问题
         driver.get('https://m.weibo.cn/') 
-        print ('判断页面1成功 0失败  结果是=%d' % result )
+        print ('判断页面是否加载成功：1表示成功 0表示失败  结果是=%d' % result )
         if result == 1:
             elems = driver.find_elements_by_css_selector('div.line-around.layout-box.mod-pagination > a:nth-child(2) > div > select > option')
             #return elems #如果封装函数，返回页面
